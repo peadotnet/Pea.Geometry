@@ -25,5 +25,18 @@ namespace Pea.Geometry2D.Shapes
 
 			Center = new Vector2D(sumX / count, sumY / count);
 		}
+
+		public double GetArea()
+		{
+			double area = 0;
+			int previous = Points.Count - 1;
+
+			for (int current = 0; current < Points.Count; current++)
+			{
+				area += Points[previous].X * Points[current].Y - Points[previous].Y * Points[current].X;
+			}
+
+			return area / 2;
+		}
 	}
 }

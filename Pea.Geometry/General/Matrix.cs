@@ -14,6 +14,24 @@ namespace Pea.Geometry.General
 			Values = new double[dimensions, dimensions];
 		}
 
+		public Matrix(double[,] values)
+		{
+			var dim0 = values.GetLength(0);
+			var dim1 = values.GetLength(1);
+
+			if (dim0 != dim1) throw new ArgumentException("The matrix must be quadratic!");
+
+			Dimensions = dim0;
+			Values = new double[dim0, dim0];
+			for (int i = 0; i < dim0; i++)
+			{
+				for (int j = 0; j < dim1; j++)
+				{
+					Values[i, j] = values[i, j];
+				}
+			}
+		}
+
 		public static Matrix Identity(int dimensions)
 		{
 			var matrix = new Matrix(dimensions);
@@ -51,7 +69,7 @@ namespace Pea.Geometry.General
 			var dimensions = matrices[0].Dimensions;
 			var result = matrices[0];
 
-			for(int m=1; m< matrices.Length; m++)
+			for(int m = 1; m < matrices.Length; m++)
 			{
 				result = result * matrices[m];
 			}
