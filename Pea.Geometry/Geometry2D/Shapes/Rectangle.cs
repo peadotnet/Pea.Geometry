@@ -9,9 +9,8 @@
 
 		public double Left => Center.X - Width / 2;
 		public double Right => Center.X + Width / 2;
-		public double Top => Center.Y - Height / 2;
-		public double Bottom => Center.Y + Height / 2;
-
+		public double Top => Center.Y + Height / 2;
+		public double Bottom => Center.Y - Height / 2;
 
 		public Rectangle(double centerX, double centerY, double width, double height)
 		{

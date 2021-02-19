@@ -42,5 +42,14 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return Math.Abs(shape1.Center.X - shape2.Center.X) - (shape1.Width + shape2.Width) / 2;
 		}
 
+		public double OverlappingArea(Rectangle shape1, Rectangle shape2)
+		{
+			var xOverlap = Math.Min(shape1.Right, shape2.Right) - Math.Max(shape1.Left, shape2.Left);
+			if (xOverlap < 0) xOverlap = 0;
+			var yOverlap = Math.Min(shape1.Top, shape2.Top) - Math.Max(shape1.Bottom, shape2.Bottom);
+			if (yOverlap < 0) yOverlap = 0;
+
+			return xOverlap * yOverlap;
+		}
 	}
 }

@@ -66,5 +66,20 @@ namespace Pea.Geometry.Tests.Operations
 			result.Should().Be(expected);
 		}
 
+		[Theory]
+		[InlineData(0, 0, 4, 2, 4, 0, 4, 2, 0)]
+		[InlineData(0, 0, 4, 2, 3, 0, 4, 2, 2)]
+		[InlineData(0, 0, 4, 2, 3, 1, 4, 2, 1)]
+		[InlineData(0, 0, 6, 4, 0, 0, 4, 2, 8)]
+		[InlineData(0, 0, 6, 4, 0, 3, 2, 4, 2)]
+		public void Rectangles_OverlappingArea_ShouldReturnCorrect(double x1, double y1, double w1, double h1, double x2, double y2, double w2, double h2, double expected)
+		{
+			var rectangle1 = new Rectangle(x1, y1, w1, h1);
+			var rectangle2 = new Rectangle(x2, y2, w2, h2);
+			var opreation = new UnrotatedRectangleOperation();
+
+			var result = opreation.OverlappingArea(rectangle1, rectangle2);
+			result.Should().Be(expected);
+		}
 	}
 }

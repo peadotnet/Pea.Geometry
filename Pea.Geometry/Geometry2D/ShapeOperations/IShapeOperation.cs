@@ -7,6 +7,7 @@ namespace Pea.Geometry.Geometry2D.Operations
 		where T2: ShapeBase
 	{
 		bool DoOverlap(T1 shape1, T2 shape2);
+		double OverlappingArea(T1 shape1, T2 shape2);
 		double Distance(T1 shape1, T2 shape2);
 		double ManhattanDistance(T1 shape1, T2 shape2);
 	}
