@@ -10,5 +10,7 @@ namespace Pea.Geometry.Geometry2D.Operations
 		double OverlappingArea(T1 shape1, T2 shape2);
 		double Distance(T1 shape1, T2 shape2);
 		double ManhattanDistance(T1 shape1, T2 shape2);
+		double EuclideanDistance(T1 shape1, T2 shape2);
+
 	}
 }

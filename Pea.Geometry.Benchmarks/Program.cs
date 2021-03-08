@@ -1,4 +1,4 @@
-﻿using System;
+﻿using BenchmarkDotNet.Running;
 
 namespace Pea.Geometry.Benchmarks
 {
@@ -6,7 +6,7 @@ namespace Pea.Geometry.Benchmarks
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			var summary = BenchmarkRunner.Run<RectanglePolygonOperationBenchmarks>();
 		}
 	}
 }

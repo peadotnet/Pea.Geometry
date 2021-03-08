@@ -5,12 +5,12 @@ namespace Pea.Geometry2D
 {
 	public class RectangleFactory
 	{
-		public Rectangle CreateByDimensions(double centerX, double centerY, double width, double height)
+		public static Rectangle CreateByDimensions(double centerX, double centerY, double width, double height)
 		{
 			return new Rectangle(centerX, centerY, width, height);
 		}
 
-		public Rectangle CreateByAreaAndRatio(double centerX, double centerY, double area, double ratio)
+		public static  Rectangle CreateByAreaAndRatio(double centerX, double centerY, double area, double ratio)
 		{
 			var width = Math.Sqrt(area * ratio);
 			var height = width / ratio;

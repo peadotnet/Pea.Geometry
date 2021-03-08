@@ -23,14 +23,16 @@ namespace Pea.Geometry.Geometry2D.Operations
 
 		public double ManhattanDistance(Rectangle shape1, Rectangle shape2)
 		{
-			double xDistance = XDistance(shape1, shape2);
-			double yDistance = YDistance(shape1, shape2);
 
-			double distance = 0;
-			if (xDistance > 0) distance += xDistance;
-			if (yDistance > 0) distance += yDistance;
+			double xDistance = Math.Abs(shape1.Center.X - shape2.Center.X);	// XDistance(shape1, shape2);
+			double yDistance = Math.Abs(shape1.Center.Y - shape2.Center.Y); //YDistance(shape1, shape2);
 
-			return distance;
+			//double distance = 0;
+			//if (xDistance > 0) distance += xDistance;
+			//if (yDistance > 0) distance += yDistance;
+
+			//return distance;
+			return xDistance + yDistance;
 		}
 
 		private double YDistance(Rectangle shape1, Rectangle shape2)
@@ -50,6 +52,19 @@ namespace Pea.Geometry.Geometry2D.Operations
 			if (yOverlap < 0) yOverlap = 0;
 
 			return xOverlap * yOverlap;
+		}
+
+		public double EuclideanDistance(Rectangle shape1, Rectangle shape2)
+		{
+			double xDistance = Math.Abs(shape1.Center.X - shape2.Center.X); // XDistance(shape1, shape2);
+			double yDistance = Math.Abs(shape1.Center.Y - shape2.Center.Y); //YDistance(shape1, shape2);
+
+			//double distance = 0;
+			//if (xDistance > 0) distance += xDistance;
+			//if (yDistance > 0) distance += yDistance;
+
+			//return distance;
+			return Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
 		}
 	}
 }

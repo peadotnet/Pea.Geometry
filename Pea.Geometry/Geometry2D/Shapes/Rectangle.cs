@@ -1,6 +1,8 @@
-﻿namespace Pea.Geometry2D.Shapes
+﻿using Pea.Core;
+
+namespace Pea.Geometry2D.Shapes
 {
-	public class Rectangle : ShapeBase
+	public class Rectangle : ShapeBase, IDeepCloneable<Rectangle>
 	{
 		public double Width { get; }
 		public double Height { get; }
@@ -20,10 +22,15 @@
 			Area = width * height;
 			Ratio = height / width;
 
-			Points.Add(new Vector2D(centerX - width / 2, centerX - width / 2));
-			Points.Add(new Vector2D(centerX + width / 2, centerX - width / 2));
-			Points.Add(new Vector2D(centerX + width / 2, centerX + width / 2));
-			Points.Add(new Vector2D(centerX - width / 2, centerX + width / 2));
+			//Points.Add(new Vector2D(centerX - width / 2, centerX - width / 2));
+			//Points.Add(new Vector2D(centerX + width / 2, centerX - width / 2));
+			//Points.Add(new Vector2D(centerX + width / 2, centerX + width / 2));
+			//Points.Add(new Vector2D(centerX - width / 2, centerX + width / 2));
+		}
+
+		public Rectangle DeepClone()
+		{
+			return new Rectangle(Center.X, Center.Y, Width, Height);
 		}
 	}
 }

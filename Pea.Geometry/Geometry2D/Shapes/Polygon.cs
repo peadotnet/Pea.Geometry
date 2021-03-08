@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Pea.Core;
+using System;
 using System.Collections.Generic;
 
 namespace Pea.Geometry2D.Shapes
 {
-	public class Polygon : ShapeBase
+	public class Polygon : ShapeBase, IDeepCloneable<Polygon>
 	{
-		private List<Vector2D> Points { get; } = new List<Vector2D>();
+//		private new List<Vector2D> Points { get; } = new List<Vector2D>();
 
 		internal Polygon(IEnumerable<Vector2D> points)
 		{
@@ -13,6 +14,7 @@ namespace Pea.Geometry2D.Shapes
 			double sumY = 0;
 			int count = 0;
 
+			//TODO: refactor this to for cycle
 			foreach(var point in points)
 			{
 				Points.Add(new Vector2D(point.X, point.Y));
@@ -21,7 +23,7 @@ namespace Pea.Geometry2D.Shapes
 				count++;
 			}
 
-			if (count < 1) throw new ArgumentException(nameof(points));
+			if (count < 1) throw new ArgumentException(nameof(points) + $" has {0} points!");
 
 			Center = new Vector2D(sumX / count, sumY / count);
 		}
@@ -37,6 +39,10 @@ namespace Pea.Geometry2D.Shapes
 			}
 
 			return area / 2;
+		}
+		public Polygon DeepClone()
+		{
+			return new Polygon(Points);
 		}
 	}
 }

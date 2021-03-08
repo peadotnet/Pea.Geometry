@@ -1,9 +1,10 @@
-﻿using Pea.Geometry.General;
+﻿using Pea.Core;
+using Pea.Geometry.General;
 using System;
 
 namespace Pea.Geometry2D
 {
-	public class Vector2D : Vector
+	public class Vector2D : Vector, IDeepCloneable<Vector2D>
 	{
 		public static Vector2D XAxis { get; } = new Vector2D(1, 0);
 		public static Vector2D YAxis { get; } = new Vector2D(0, 1);
@@ -55,6 +56,11 @@ namespace Pea.Geometry2D
 		public Vector2D GetNormal()
 		{
 			return new Vector2D(Y, -1 * X);
+		}
+
+		public Vector2D DeepClone()
+		{
+			return new Vector2D(X, Y);
 		}
 
 		#region Operator overloading

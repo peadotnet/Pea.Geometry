@@ -53,9 +53,9 @@ namespace Pea.Geometry.Tests.Operations
 		}
 
 		[Theory]
-		[InlineData(1, 1, 4, 2, 7, 2, 4, 2, 2)]
-		[InlineData(1, 1, 4, 2, -3, 4, 2, 2, 2)]
-		[InlineData(1, 1, 4, 2, 1, -2, 3, 2, 1)]
+		[InlineData(1, 1, 4, 2, 7, 2, 4, 2, 7)]
+		[InlineData(1, 1, 4, 2, -3, 4, 2, 2, 7)]
+		[InlineData(1, 1, 4, 2, 1, -2, 3, 2, 3)]
 		public void Rectangles_ManhattanDistance_ShouldReturnCorrect(double x1, double y1, double w1, double h1, double x2, double y2, double w2, double h2, double expected)
 		{
 			var rectangle1 = new Rectangle(x1, y1, w1, h1);
