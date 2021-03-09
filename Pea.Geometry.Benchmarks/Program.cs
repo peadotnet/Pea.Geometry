@@ -6,7 +6,7 @@ namespace Pea.Geometry.Benchmarks
 	{
 		static void Main(string[] args)
 		{
-			var summary = BenchmarkRunner.Run<RectanglePolygonOperationBenchmarks>();
+			var summary = BenchmarkRunner.Run<RectanglePolygonOverlapBenchmarks>();
 		}
 	}
 }

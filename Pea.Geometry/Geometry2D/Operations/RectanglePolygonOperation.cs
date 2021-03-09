@@ -4,7 +4,7 @@ using System;
 
 namespace Pea.Geometry.Geometry2D.Operations
 {
-	public class RectanglePolygonOperation : IShapeOperation<Rectangle, Polygon>
+	public class RectanglePolygonOperation : ShapeOperationBase<Rectangle, Polygon>
 	{
 		public enum ShapeRelation
 		{
@@ -14,12 +14,12 @@ namespace Pea.Geometry.Geometry2D.Operations
 			Intersected = 2
 		}
 
-		public double Distance(Rectangle rectangle, Polygon polygon)
+		public override double Distance(Rectangle rectangle, Polygon polygon)
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool DoOverlap(Rectangle rectangle, Polygon polygon)
+		public override bool DoOverlap(Rectangle rectangle, Polygon polygon)
 		{
 			var checkByPoints = CheckPolygonPoints(rectangle, polygon);
 			if (checkByPoints == ShapeRelation.Outside) return false;
@@ -130,34 +130,32 @@ namespace Pea.Geometry.Geometry2D.Operations
 
 		public bool DoAnySideIntersect(Rectangle rectangle, Polygon polygon)
 		{
-			var n = polygon.Points.Count;
-			for(int r=0; r<=4; r++)
+			var n = polygon.Points.Count - 1;
+			for(int r = 0; r < 4; r++)
 			{
-				int nextr = (r + 1) % 4;
-				for(int p=0; p<=n; p++)
+				for(int p = 0; p < n; p++)
 				{
-					int nextp = (p + 1) % 4;
-					if (SegmentOperation.DoIntersect(rectangle.Points[r], rectangle.Points[nextr], polygon.Points[p], polygon.Points[nextp]))
+					if (SegmentOperation.DoIntersect(rectangle.Points[r], rectangle.Points[r + 1], polygon.Points[p], polygon.Points[p + 1]))
 					{
 						return true;
-					}	
+					}
 				}
 			}
 
 			return false;
 		}
 
-		public double EuclideanDistance(Rectangle shape1, Polygon shape2)
+		public override double EuclideanDistanceOfCenters(Rectangle shape1, Polygon shape2)
 		{
 			throw new NotImplementedException();
 		}
 
-		public double ManhattanDistance(Rectangle shape1, Polygon shape2)
+		public override double ManhattanDistanceOfCenters(Rectangle shape1, Polygon shape2)
 		{
 			throw new NotImplementedException();
 		}
 
-		public double OverlappingArea(Rectangle shape1, Polygon shape2)
+		public override double OverlappingArea(Rectangle shape1, Polygon shape2)
 		{
 			throw new NotImplementedException();
 		}

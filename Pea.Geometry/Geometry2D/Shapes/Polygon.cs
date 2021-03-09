@@ -18,9 +18,11 @@ namespace Pea.Geometry2D.Shapes
 
 		internal Polygon(List<Vector2D> points)
 		{
+			int count = points.Count;
+			if (count < 3) throw new ArgumentException($"The polygon has to have at least 3 points!");
+
 			double sumX = 0;
 			double sumY = 0;
-			int count = 0;
 
 			Points = new List<Vector2D>();
 
@@ -29,12 +31,16 @@ namespace Pea.Geometry2D.Shapes
 				Points.Add(new Vector2D(points[i].X, points[i].Y));
 				sumX += points[i].X;
 				sumY += points[i].Y;
-				count++;
 			}
 
-			if (count < 1) throw new ArgumentException(nameof(points) + $" has {0} points!");
-
 			Center = new Vector2D(sumX / count, sumY / count);
+
+			var first = Points[0];
+			var last = Points[count - 1];
+			if (first.X != last.X || last.Y != last.Y)
+			{
+				Points.Add(new Vector2D(first.X, first.Y));
+			}
 		}
 
 		public double GetArea()

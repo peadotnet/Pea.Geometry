@@ -57,7 +57,7 @@ namespace Pea.Geometry.Tests.Operations
 		[InlineData(-9, -1, false)]
 		[InlineData(9, -1, false)]
 		[InlineData(-9, 0, true)]
-		[InlineData(9, 0, false)] //!!!
+		[InlineData(7, 0, false)]
 		[InlineData(0, 3, false)]
 
 		public void Point_cn_Poly(double x, double y, bool expected)
@@ -79,21 +79,38 @@ namespace Pea.Geometry.Tests.Operations
 		[InlineData(-9, -1, false)]
 		[InlineData(9, -1, false)]
 		[InlineData(-9, 0, true)]
-		[InlineData(9, 0, false)] //!!!
+		[InlineData(7, 0, false)]
 		[InlineData(0, 3, false)]
 
 		public void Point_wn_Poly(double x, double y, bool expected)
 		{
-			Vector2D point = new Vector2D(x, y);
 			Polygon polygon = CreateTestPolygon1();
 			var operation = new RectanglePolygonOperation();
+			Vector2D point = new Vector2D(x, y);
 			var result = operation.wn_PnPoly(point, polygon);
 			result.Should().Be(expected);
 		}
 
-		public void RectanglePolygonOverlap()
-		{
+		[Theory]
+		[InlineData(0, 0, 4, 2, true)]
+		[InlineData(-12, 0, 4, 2, false)]
+		[InlineData(-10, 0, 4, 2, true)]
+		[InlineData(0, -7, 4, 2, false)]
+		[InlineData(0, -5, 4, 2, true)]
+		[InlineData(-3, 4, 2, 2, true)]
+		[InlineData(0, 4, 2, 2, false)]
+		[InlineData(3, 4, 2, 2, true)]
+		[InlineData(5, 5, 2, 2, true)]
+		[InlineData(-11, 3, 3, 6, true)]
+		[InlineData(9, 0, 4, 2, false)]
 
+		public void RectanglePolygonOverlap(double x, double y, double width, double height, bool expected)
+		{
+			Polygon polygon = CreateTestPolygon1();
+			var operation = new RectanglePolygonOperation();
+			var rectangle = new Rectangle(x, y, width, height);
+			var result = operation.DoOverlap(rectangle, polygon);
+			result.Should().Be(expected);
 		}
 
 		private static Polygon CreateTestPolygon1()
@@ -106,9 +123,9 @@ namespace Pea.Geometry.Tests.Operations
 				new Vector2D(2, 2),
 				new Vector2D(5, 5),
 				new Vector2D(10, 5),
+				new Vector2D(5, 0),
 				new Vector2D(8, -5),
-				new Vector2D(-8, -5),
-				new Vector2D(-10, 5)
+				new Vector2D(-8, -5)
 			};
 			var polygon = PolygonFactory.CreateByPoints(points);
 			return polygon;

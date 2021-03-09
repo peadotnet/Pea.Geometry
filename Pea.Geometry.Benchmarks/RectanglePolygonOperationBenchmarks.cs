@@ -17,7 +17,7 @@ namespace Pea.Geometry.Benchmarks
 		[Params(4, 5, 6, 10, 20)]
 		public int PolygonSize { get; set; }
 
-		public Polygon Polygon;
+		public Polygon RandomPolygon;
 
 		public List<Vector2D> Points = new List<Vector2D>();
 
@@ -40,7 +40,7 @@ namespace Pea.Geometry.Benchmarks
 				var y = random.NextDouble() * 100000;
 				points.Add(new Vector2D(x, y));
 			}
-			this.Polygon = PolygonFactory.CreateByPoints(points);
+			this.RandomPolygon = PolygonFactory.CreateByPoints(points);
 
 			for (int i = 0; i < Count; i++)
 			{
@@ -56,7 +56,7 @@ namespace Pea.Geometry.Benchmarks
 			var insideCount = 0;
 			for (int i = 0; i < Points.Count; i++)
 			{
-				if (Operation.IsInsideBounding(Points[i], Polygon)) insideCount++;
+				if (Operation.IsInsideBounding(Points[i], RandomPolygon)) insideCount++;
 			}
 			return insideCount;
 		}
@@ -67,7 +67,7 @@ namespace Pea.Geometry.Benchmarks
 			var insideCount = 0;
 			for (int i = 0; i < Count; i++)
 			{
-				if (Operation.cn_PnPoly(Points[i], Polygon)) insideCount++;
+				if (Operation.cn_PnPoly(Points[i], RandomPolygon)) insideCount++;
 			}
 			return insideCount;
 		}
@@ -78,7 +78,7 @@ namespace Pea.Geometry.Benchmarks
 			var insideCount = 0;
 			for (int i = 0; i < Count; i++)
 			{
-				if (Operation.wn_PnPoly(Points[i], Polygon)) insideCount++;
+				if (Operation.wn_PnPoly(Points[i], RandomPolygon)) insideCount++;
 			}
 			return insideCount;
 		}

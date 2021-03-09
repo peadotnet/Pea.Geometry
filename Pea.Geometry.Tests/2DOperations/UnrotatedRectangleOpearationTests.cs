@@ -62,7 +62,7 @@ namespace Pea.Geometry.Tests.Operations
 			var rectangle2 = new Rectangle(x2, y2, w2, h2);
 			var opreation = new UnrotatedRectangleOperation();
 
-			var result = opreation.ManhattanDistance(rectangle1, rectangle2);
+			var result = opreation.ManhattanDistanceOfCenters(rectangle1, rectangle2);
 			result.Should().Be(expected);
 		}
 
