@@ -51,12 +51,12 @@ namespace Pea.Geometry.Benchmarks
 		}
 
 		[Benchmark]
-		public int IsInside()
+		public int IsInsideBounding()
 		{
 			var insideCount = 0;
 			for (int i = 0; i < Points.Count; i++)
 			{
-				if (Operation.IsInside(Points[i].X, Points[i].Y, Polygon)) insideCount++;
+				if (Operation.IsInsideBounding(Points[i], Polygon)) insideCount++;
 			}
 			return insideCount;
 		}

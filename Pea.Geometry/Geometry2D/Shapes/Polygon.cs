@@ -6,20 +6,29 @@ namespace Pea.Geometry2D.Shapes
 {
 	public class Polygon : ShapeBase, IDeepCloneable<Polygon>
 	{
-//		private new List<Vector2D> Points { get; } = new List<Vector2D>();
+		private Rectangle _boundingRectangle = null;
+		public Rectangle BoundingRectangle
+		{
+			get
+			{
+				if (_boundingRectangle == null) _boundingRectangle = CreateBoundingRectangle();
+				return _boundingRectangle;
+			}
+		}
 
-		internal Polygon(IEnumerable<Vector2D> points)
+		internal Polygon(List<Vector2D> points)
 		{
 			double sumX = 0;
 			double sumY = 0;
 			int count = 0;
 
-			//TODO: refactor this to for cycle
-			foreach(var point in points)
+			Points = new List<Vector2D>();
+
+			for (int i=0; i< points.Count; i++)
 			{
-				Points.Add(new Vector2D(point.X, point.Y));
-				sumX += point.X;
-				sumY += point.Y;
+				Points.Add(new Vector2D(points[i].X, points[i].Y));
+				sumX += points[i].X;
+				sumY += points[i].Y;
 				count++;
 			}
 
@@ -37,9 +46,27 @@ namespace Pea.Geometry2D.Shapes
 			{
 				area += Points[previous].X * Points[current].Y - Points[previous].Y * Points[current].X;
 			}
-
 			return area / 2;
 		}
+
+		public Rectangle CreateBoundingRectangle()
+		{
+			double xMin = double.MaxValue;
+			double xMax = double.MinValue;
+			double yMin = double.MaxValue;
+			double yMax = double.MinValue;
+
+			for(int i=0; i < Points.Count; i++)
+			{
+				if (Points[i].X < xMin) xMin = Points[i].X;
+				if (Points[i].X > xMax) xMax = Points[i].X;
+				if (Points[i].Y < yMin) yMin = Points[i].Y;
+				if (Points[i].Y > yMax) yMax = Points[i].Y;
+			}
+
+			return new Rectangle((xMin + xMax)/2, (yMin + yMax)/2, xMax - xMin, yMax - yMin);
+		}
+
 		public Polygon DeepClone()
 		{
 			return new Polygon(Points);

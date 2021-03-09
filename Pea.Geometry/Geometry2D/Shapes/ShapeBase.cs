@@ -8,7 +8,7 @@ namespace Pea.Geometry2D.Shapes
 		protected Vector2D center_original { get; set; }
 		public Vector2D Center { get; set; }
 
-		public List<Vector2D> Points { get; }  = new List<Vector2D>();
+		public virtual List<Vector2D> Points { get; protected set; }
 		public IList<Transformation2D> Transformations { get; } = new List<Transformation2D>();
 		
 		protected ShapeBase()

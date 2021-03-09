@@ -5,7 +5,7 @@ namespace Pea.Geometry2D
 {
 	public class PolygonFactory
 	{
-		public static Polygon CreateByPoints(IEnumerable<Vector2D> points)
+		public static Polygon CreateByPoints(List<Vector2D> points)
 		{
 			return new Polygon(points);
 		}

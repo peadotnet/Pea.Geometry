@@ -19,9 +19,16 @@ namespace Pea.Geometry.Geometry2D.Operations
 			throw new NotImplementedException();
 		}
 
-		public bool DoOverlap(Rectangle shape1, Polygon shape2)
+		public bool DoOverlap(Rectangle rectangle, Polygon polygon)
 		{
-			throw new NotImplementedException();
+			var checkByPoints = CheckPolygonPoints(rectangle, polygon);
+			if (checkByPoints == ShapeRelation.Outside) return false;
+			if (checkByPoints == ShapeRelation.Intersected) return true;
+
+			checkByPoints = CheckRectanglePoints(rectangle, polygon);
+			if (checkByPoints == ShapeRelation.Intersected) return true;
+
+			return DoAnySideIntersect(rectangle, polygon);
 		}
 
 		public ShapeRelation CheckPolygonPoints(Rectangle rectangle, Polygon polygon)
@@ -52,49 +59,37 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return ShapeRelation.ToBeCalculated;
 		}
 
-		public bool IsInside(double x, double y, Polygon polygon)
+		public ShapeRelation CheckRectanglePoints(Rectangle rectangle, Polygon polygon)
 		{
-			int counter = 0;
-
-			var n = polygon.Points.Count;
-			var point1 = polygon.Points[0];
-			for (int i = 1; i <= n; i++)
+			var points = rectangle.Points;
+			for(int i=0; i< points.Count; i++)
 			{
-				var point2 = polygon.Points[i % n];
-				if (y > Min(point1.Y, point2.Y))
-				{
-					if (y <= Max(point1.Y, point2.Y))
-					{
-						if (point1.Y != point2.Y)
-						{
-							var xIntersection = (y - point1.Y) * (point2.X - point1.X) / (point2.Y - point1.Y) + point1.X;
-							if (x <= Max(point1.X, point2.X))
-							{
-								if (point1.X == point2.X || x <= xIntersection)
-									counter++;
-							}
-						}
-					}
-				}
-				point1 = point2;
+				if (wn_PnPoly(points[i], polygon)) return ShapeRelation.Intersected;
 			}
-
-			return (counter % 2 == 1);
+			return ShapeRelation.ToBeCalculated;
 		}
 
-		// This code is patterned after [Franklin, 2000]
+		public bool IsInsideBounding(Vector2D point, Polygon polygon)
+		{
+			var rectangle = polygon.BoundingRectangle;
+			if (point.X >= rectangle.Left && point.X <= rectangle.Right && point.Y >= rectangle.Bottom && point.Y <= rectangle.Top) return true;
+
+			return false;
+		}
+
 		public bool cn_PnPoly(Vector2D point, Polygon polygon)
 		{
-			var n = polygon.Points.Count - 1;
+			var n = polygon.Points.Count;
 			int count = 0;
 
 			for (int i = 0; i < n; i++)
 			{
-				if (((polygon.Points[i].Y <= point.Y) && (polygon.Points[i + 1].Y > point.Y))
-				 || ((polygon.Points[i].Y > point.Y) && (polygon.Points[i + 1].Y <= point.Y)))
+				var next = (i + 1) % n;
+				if (((polygon.Points[i].Y <= point.Y) && (polygon.Points[next].Y > point.Y))
+				 || ((polygon.Points[i].Y > point.Y) && (polygon.Points[next].Y <= point.Y)))
 				{
 					var vt = (point.Y - polygon.Points[i].Y) / (polygon.Points[i + 1].Y - polygon.Points[i].Y);
-					if (point.X < polygon.Points[i].X + vt * (polygon.Points[i + 1].X - polygon.Points[i].X))
+					if (point.X < polygon.Points[i].X + vt * (polygon.Points[next].X - polygon.Points[i].X))
 						count++;
 				}
 			}
@@ -103,23 +98,24 @@ namespace Pea.Geometry.Geometry2D.Operations
 
 		public bool wn_PnPoly(Vector2D point, Polygon polygon)
 		{
-			var n = polygon.Points.Count - 1;
+			var n = polygon.Points.Count;
 			int count = 0;
 
 			for (int i = 0; i < n; i++)
 			{
+				var next = (i + 1) % n;
 				if (polygon.Points[i].Y <= point.Y)
 				{
-					if (polygon.Points[i + 1].Y > point.Y)
+					if (polygon.Points[next].Y > point.Y)
 					{
-						if (IsLeft(polygon.Points[i], polygon.Points[i + 1], point) > 0) count++;
+						if (IsLeft(polygon.Points[i], polygon.Points[next], point) > 0) count++;
 					}
 				}
 				else
 				{
-					if (polygon.Points[i + 1].Y <= point.Y)
+					if (polygon.Points[next].Y <= point.Y)
 					{
-						if (IsLeft(polygon.Points[i], polygon.Points[i + 1], point) < 0) count--;
+						if (IsLeft(polygon.Points[i], polygon.Points[next], point) < 0) count--;
 					}
 				}
 			}
@@ -130,6 +126,25 @@ namespace Pea.Geometry.Geometry2D.Operations
 		{
 			return ((P1.X - P0.X) * (P2.Y - P0.Y)
 					- (P2.X - P0.X) * (P1.Y - P0.Y));
+		}
+
+		public bool DoAnySideIntersect(Rectangle rectangle, Polygon polygon)
+		{
+			var n = polygon.Points.Count;
+			for(int r=0; r<=4; r++)
+			{
+				int nextr = (r + 1) % 4;
+				for(int p=0; p<=n; p++)
+				{
+					int nextp = (p + 1) % 4;
+					if (SegmentOperation.DoIntersect(rectangle.Points[r], rectangle.Points[nextr], polygon.Points[p], polygon.Points[nextp]))
+					{
+						return true;
+					}	
+				}
+			}
+
+			return false;
 		}
 
 		public double EuclideanDistance(Rectangle shape1, Polygon shape2)

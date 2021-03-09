@@ -36,12 +36,14 @@ namespace Pea.Geometry.Tests.Operations
 		[InlineData(-3, 2, true)]
 		[InlineData(5, 3, true)]
 		[InlineData(3, 2, true)]
+		[InlineData(0, 6, false)]
+		[InlineData(0, 3, true)]
 
 		public void Point_IsInside(double x, double y, bool expected)
 		{
 			Polygon polygon = CreateTestPolygon1();
 			var operation = new RectanglePolygonOperation();
-			var result = operation.IsInside(x, y, polygon);
+			var result = operation.IsInsideBounding(new Vector2D(x, y), polygon);
 			result.Should().Be(expected);
 		}
 
@@ -51,6 +53,12 @@ namespace Pea.Geometry.Tests.Operations
 		[InlineData(-3, 2, true)]
 		[InlineData(5, 3, true)]
 		[InlineData(3, 2, true)]
+		[InlineData(-7, 6, false)]
+		[InlineData(-9, -1, false)]
+		[InlineData(9, -1, false)]
+		[InlineData(-9, 0, true)]
+		[InlineData(9, 0, false)] //!!!
+		[InlineData(0, 3, false)]
 
 		public void Point_cn_Poly(double x, double y, bool expected)
 		{
@@ -67,6 +75,12 @@ namespace Pea.Geometry.Tests.Operations
 		[InlineData(-3, 2, true)]
 		[InlineData(5, 3, true)]
 		[InlineData(3, 2, true)]
+		[InlineData(-7, 6, false)]
+		[InlineData(-9, -1, false)]
+		[InlineData(9, -1, false)]
+		[InlineData(-9, 0, true)]
+		[InlineData(9, 0, false)] //!!!
+		[InlineData(0, 3, false)]
 
 		public void Point_wn_Poly(double x, double y, bool expected)
 		{
@@ -75,6 +89,11 @@ namespace Pea.Geometry.Tests.Operations
 			var operation = new RectanglePolygonOperation();
 			var result = operation.wn_PnPoly(point, polygon);
 			result.Should().Be(expected);
+		}
+
+		public void RectanglePolygonOverlap()
+		{
+
 		}
 
 		private static Polygon CreateTestPolygon1()
