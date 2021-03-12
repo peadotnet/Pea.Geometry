@@ -31,6 +31,11 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return DoAnySideIntersect(rectangle, polygon);
 		}
 
+		public override bool IsIncluded(Rectangle shape1, Polygon shape2)
+		{
+			throw new NotImplementedException();
+		}
+
 		public ShapeRelation CheckPolygonPoints(Rectangle rectangle, Polygon polygon)
 		{
 			var left = rectangle.Left;
@@ -108,24 +113,18 @@ namespace Pea.Geometry.Geometry2D.Operations
 				{
 					if (polygon.Points[next].Y > point.Y)
 					{
-						if (IsLeft(polygon.Points[i], polygon.Points[next], point) > 0) count++;
+						if (VectorHelper.Orientation(polygon.Points[i], polygon.Points[next], point) > 0) count++;
 					}
 				}
 				else
 				{
 					if (polygon.Points[next].Y <= point.Y)
 					{
-						if (IsLeft(polygon.Points[i], polygon.Points[next], point) < 0) count--;
+						if (VectorHelper.Orientation(polygon.Points[i], polygon.Points[next], point) < 0) count--;
 					}
 				}
 			}
 			return count != 0;
-		}
-
-		public double IsLeft(Vector2D P0, Vector2D P1, Vector2D P2)
-		{
-			return ((P1.X - P0.X) * (P2.Y - P0.Y)
-					- (P2.X - P0.X) * (P1.Y - P0.Y));
 		}
 
 		public bool DoAnySideIntersect(Rectangle rectangle, Polygon polygon)
@@ -135,7 +134,7 @@ namespace Pea.Geometry.Geometry2D.Operations
 			{
 				for(int p = 0; p < n; p++)
 				{
-					if (SegmentOperation.DoIntersect(rectangle.Points[r], rectangle.Points[r + 1], polygon.Points[p], polygon.Points[p + 1]))
+					if (VectorHelper.DoIntersect(rectangle.Points[r], rectangle.Points[r + 1], polygon.Points[p], polygon.Points[p + 1]))
 					{
 						return true;
 					}
@@ -145,29 +144,9 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return false;
 		}
 
-		public override double EuclideanDistanceOfCenters(Rectangle shape1, Polygon shape2)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override double ManhattanDistanceOfCenters(Rectangle shape1, Polygon shape2)
-		{
-			throw new NotImplementedException();
-		}
-
 		public override double OverlappingArea(Rectangle shape1, Polygon shape2)
 		{
 			throw new NotImplementedException();
-		}
-
-		private double Min(double x, double y)
-		{
-			return x < y ? x : y;
-		}
-
-		private double Max(double x, double y)
-		{
-			return x > y ? x : y;
 		}
 	}
 }

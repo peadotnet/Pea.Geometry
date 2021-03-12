@@ -77,5 +77,9 @@ namespace Pea.Geometry2D.Shapes
 		{
 			return new Polygon(Points);
 		}
+
+		public override void Invalidate()
+		{
+		}
 	}
 }

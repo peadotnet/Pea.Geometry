@@ -87,5 +87,14 @@ namespace Pea.Geometry2D.Shapes
 		{
 			return new Rectangle(Center.X, Center.Y, Width, Height);
 		}
+
+		public override void Invalidate()
+		{
+			_left = double.NaN;
+			_right = double.NaN;
+			_top = double.NaN;
+			_bottom = double.NaN;
+			_points = null;
+		}
 	}
 }

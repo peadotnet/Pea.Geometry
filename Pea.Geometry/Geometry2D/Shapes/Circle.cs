@@ -7,16 +7,10 @@ namespace Pea.Geometry2D.Shapes
 	{
 		public double Radius { get; set; }
 
-		public Circle(Vector2D center, double radius, int polygonSides = 8)
+		public Circle(Vector2D center, double radius)
 		{
-			if (polygonSides < 1) throw new ArgumentException(nameof(polygonSides));
-
 			Center = center;
 			Radius = radius;
-			for(int p = 0;p < polygonSides; p++)
-			{
-				Points.Add(new Vector2D(2 * p * Math.PI / polygonSides) * radius);
-			}
 		}
 
 		public override void DoTransform()
@@ -27,7 +21,11 @@ namespace Pea.Geometry2D.Shapes
 
 		public Circle DeepClone()
 		{
-			return new Circle(Center.DeepClone(), Radius, Points.Count);
+			return new Circle(Center.DeepClone(), Radius);
+		}
+
+		public override void Invalidate()
+		{
 		}
 	}
 }

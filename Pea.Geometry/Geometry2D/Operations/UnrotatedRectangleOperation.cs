@@ -21,6 +21,11 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return (xDistance <= 0) && (yDistance <= 0);
 		}
 
+		public override bool IsIncluded(Rectangle shape1, Rectangle shape2)
+		{
+			return (shape1.Left > shape2.Left && shape1.Right < shape2.Right && shape1.Bottom > shape2.Bottom && shape1.Top < shape2.Top);
+		}
+
 		private double YDistance(Rectangle shape1, Rectangle shape2)
 		{
 			return Abs(shape1.Center.Y - shape2.Center.Y) - (shape1.Height + shape2.Height) / 2;
@@ -38,37 +43,6 @@ namespace Pea.Geometry.Geometry2D.Operations
 			if (yOverlap < 0) yOverlap = 0;
 
 			return xOverlap * yOverlap;
-		}
-
-		public override double EuclideanDistanceOfCenters(Rectangle shape1, Rectangle shape2)
-		{
-			double xDistance = Abs(shape1.Center.X - shape2.Center.X);
-			double yDistance = Abs(shape1.Center.Y - shape2.Center.Y);
-
-			return Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
-		}
-
-		public override double ManhattanDistanceOfCenters(Rectangle shape1, Rectangle shape2)
-		{
-
-			double xDistance = Abs(shape1.Center.X - shape2.Center.X);
-			double yDistance = Abs(shape1.Center.Y - shape2.Center.Y);
-			return xDistance + yDistance;
-		}
-
-		private double Min(double x, double y)
-		{
-			return x < y ? x : y;
-		}
-
-		private double Max(double x, double y)
-		{
-			return x > y ? x : y;
-		}
-
-		private double Abs(double val)
-		{
-			return val < 0 ? -1 * val : val;
 		}
 	}
 }

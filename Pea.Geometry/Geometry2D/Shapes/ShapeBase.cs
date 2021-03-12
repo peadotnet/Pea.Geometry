@@ -1,4 +1,5 @@
-﻿using Pea.Geometry2D.Transformations;
+﻿using Pea.Core;
+using Pea.Geometry2D.Transformations;
 using System.Collections.Generic;
 
 namespace Pea.Geometry2D.Shapes
@@ -44,5 +45,7 @@ namespace Pea.Geometry2D.Shapes
 				Points[p] = (Vector2D)transformation.Apply(Points[p]);
 			}
 		}
+
+		public abstract void Invalidate();
 	}
 }

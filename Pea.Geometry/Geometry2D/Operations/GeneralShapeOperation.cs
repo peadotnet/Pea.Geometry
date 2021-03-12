@@ -1,7 +1,6 @@
 ﻿using Pea.Geometry2D.Shapes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Pea.Geometry.Geometry2D.Operations
 {
@@ -12,11 +11,12 @@ namespace Pea.Geometry.Geometry2D.Operations
 
 		public GeneralShapeOperation()
 		{
-			RegisterOperator<Rectangle, Rectangle>(new UnrotatedRectangleOperation());
-			RegisterOperator<Rectangle, Polygon>(new RectanglePolygonOperation());
+			RegisterOperation<Rectangle, Rectangle>(new UnrotatedRectangleOperation());
+			RegisterOperation<Rectangle, Polygon>(new RectanglePolygonOperation());
+			RegisterOperation<Rectangle, Circle>(new RectangleCircleOperation());
 		}
 
-		public void RegisterOperator<T1, T2>(IShapeOperation<T1, T2> operation)
+		public void RegisterOperation<T1, T2>(IShapeOperation<T1, T2> operation)
 			where T1 : IShape2D
 			where T2 : IShape2D
 		{
@@ -53,6 +53,12 @@ namespace Pea.Geometry.Geometry2D.Operations
 		{
 			var key = Tuple.Create<Type, Type>(shape1.GetType(), shape2.GetType());
 			return Operations[key].ManhattanDistanceOfCenters(shape1, shape2);
+		}
+
+		public override bool IsIncluded(IShape2D shape1, IShape2D shape2)
+		{
+			var key = Tuple.Create<Type, Type>(shape1.GetType(), shape2.GetType());
+			return Operations[key].IsIncluded(shape1, shape2);
 		}
 	}
 }
