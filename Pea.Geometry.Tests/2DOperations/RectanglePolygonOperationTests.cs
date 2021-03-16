@@ -113,6 +113,29 @@ namespace Pea.Geometry.Tests.Operations
 			result.Should().Be(expected);
 		}
 
+		[Theory]
+		[InlineData(0, 0, 4, 2, true)]
+		[InlineData(5.5, 3, 2, 2, true)]
+		[InlineData(-7, 3, 4, 2, true)]
+		[InlineData(-12, 0, 4, 2, false)]
+		[InlineData(-10, 0, 4, 2, false)]
+		[InlineData(0, -7, 4, 2, false)]
+		[InlineData(0, -5, 4, 2, false)]
+		[InlineData(-3, 4, 2, 2, false)]
+		[InlineData(0, 4, 2, 2, false)]
+		[InlineData(3, 4, 2, 2, false)]
+		[InlineData(5, 5, 2, 2, false)]
+		[InlineData(-11, 3, 3, 6, false)]
+		[InlineData(9, 0, 4, 2, false)]
+		public void RectanglePolygon_IsIncluded_ShouldReturn(double x, double y, double width, double height, bool expected)
+		{
+			Polygon polygon = CreateTestPolygon1();
+			var operation = new RectanglePolygonOperation();
+			var rectangle = new Rectangle(x, y, width, height);
+			var result = operation.IsIncluded(rectangle, polygon);
+			result.Should().Be(expected);
+		}
+
 		private static Polygon CreateTestPolygon1()
 		{
 			var points = new List<Vector2D>()

@@ -1,5 +1,7 @@
 ﻿using Pea.Geometry2D;
+using Pea.Geometry2D.Shapes;
 using System;
+using System.Collections.Generic;
 
 namespace Pea.Geometry.Geometry2D.Operations
 {
@@ -45,5 +47,8 @@ namespace Pea.Geometry.Geometry2D.Operations
 
             return false;
         }
+
+
+
     }
 }

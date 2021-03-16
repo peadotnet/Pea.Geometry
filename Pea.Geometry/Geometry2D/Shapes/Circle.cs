@@ -27,5 +27,12 @@ namespace Pea.Geometry2D.Shapes
 		public override void Invalidate()
 		{
 		}
+
+		public bool Contains(Vector2D point)
+		{
+			var dx = point.X - Center.X;
+			var dy = point.Y - Center.Y;
+			return (dx * dx) + (dy * dy) <= Radius * Radius;
+		}
 	}
 }

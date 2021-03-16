@@ -25,15 +25,21 @@ namespace Pea.Geometry.Geometry2D.Operations
 			if (checkByPoints == ShapeRelation.Outside) return false;
 			if (checkByPoints == ShapeRelation.Intersected) return true;
 
-			checkByPoints = CheckRectanglePoints(rectangle, polygon);
+			checkByPoints = AnyRectanglePointIsInside(rectangle, polygon);
 			if (checkByPoints == ShapeRelation.Intersected) return true;
 
-			return DoAnySideIntersect(rectangle, polygon);
+			return AnySideIntersects(rectangle, polygon);
 		}
 
-		public override bool IsIncluded(Rectangle shape1, Polygon shape2)
+		public override bool IsIncluded(Rectangle rectangle, Polygon polygon)
 		{
-			throw new NotImplementedException();
+			var checkByPoints = CheckPolygonPoints(rectangle, polygon);
+			if (checkByPoints == ShapeRelation.Outside) return false;
+			if (checkByPoints == ShapeRelation.Intersected) return false;
+
+			if (AnyRectanglePointIsOutside(rectangle, polygon)) return false;
+
+			return !AnySideIntersects(rectangle, polygon);
 		}
 
 		public ShapeRelation CheckPolygonPoints(Rectangle rectangle, Polygon polygon)
@@ -64,14 +70,24 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return ShapeRelation.ToBeCalculated;
 		}
 
-		public ShapeRelation CheckRectanglePoints(Rectangle rectangle, Polygon polygon)
+		public ShapeRelation AnyRectanglePointIsInside(Rectangle rectangle, Polygon polygon)
 		{
 			var points = rectangle.Points;
-			for(int i=0; i< points.Count; i++)
+			for(int i=0; i < 4; i++)
 			{
 				if (wn_PnPoly(points[i], polygon)) return ShapeRelation.Intersected;
 			}
 			return ShapeRelation.ToBeCalculated;
+		}
+
+		public bool AnyRectanglePointIsOutside(Rectangle rectangle, Polygon polygon)
+		{
+			var points = rectangle.Points;
+			for (int i = 0; i < 4; i++)
+			{
+				if (!wn_PnPoly(points[i], polygon)) return true;
+			}
+			return false;
 		}
 
 		public bool IsInsideBounding(Vector2D point, Polygon polygon)
@@ -127,7 +143,7 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return count != 0;
 		}
 
-		public bool DoAnySideIntersect(Rectangle rectangle, Polygon polygon)
+		public bool AnySideIntersects(Rectangle rectangle, Polygon polygon)
 		{
 			var n = polygon.Points.Count - 1;
 			for(int r = 0; r < 4; r++)
