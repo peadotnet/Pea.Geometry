@@ -1,9 +1,8 @@
-﻿using Pea.Core;
-using System;
+﻿using Pea.Geometry.General;
 
 namespace Pea.Geometry2D.Shapes
 {
-	public class Circle : ShapeBase, IDeepCloneable<Circle>
+	public class Circle : ShapeBase
 	{
 		public double Radius { get; set; }
 
@@ -19,7 +18,7 @@ namespace Pea.Geometry2D.Shapes
 			Radius = (Points[0] - Center).GetLength();
 		}
 
-		public Circle DeepClone()
+		public override IShape2D DeepClone()
 		{
 			return new Circle(Center.DeepClone(), Radius);
 		}
@@ -33,6 +32,11 @@ namespace Pea.Geometry2D.Shapes
 			var dx = point.X - Center.X;
 			var dy = point.Y - Center.Y;
 			return (dx * dx) + (dy * dy) <= Radius * Radius;
+		}
+
+		public override IShape2D DoOffset(double marginWidth)
+		{
+			return new Circle(this.Center.DeepClone(), this.Radius + marginWidth);
 		}
 	}
 }

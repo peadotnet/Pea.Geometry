@@ -1,10 +1,9 @@
 ﻿using Pea.Geometry2D.Shapes;
-using Pea.Geometry2D.Transformations;
 using System.Collections.Generic;
 
 namespace Pea.Geometry.Geometry2D
 {
-	public class Scene2D
+	public class Scene2D : Transformable2DBase
 	{
 		public Scene2D()
 		{
@@ -12,18 +11,15 @@ namespace Pea.Geometry.Geometry2D
 
 		public IList<IShape2D> Shapes { get; } = new List<IShape2D>();
 
-		public IList<Transformation2D> Transformations { get; } = new List<Transformation2D>();
-
 		void DoTransform()
 		{
+			var transformation = ComposeTransformations();
 			for (int s = 0; s < Shapes.Count; s++)
 			{
-				for (int t = 0; t < Transformations.Count; t++)
-				{
-					Shapes[s].Transformations.Add(Transformations[t]);
-				}
-				Shapes[s].DoTransform();
+				Shapes[s].Apply(transformation);
 			}
 		}
+
+		public IShape2D this[int index] => Shapes[index];
 	}
 }

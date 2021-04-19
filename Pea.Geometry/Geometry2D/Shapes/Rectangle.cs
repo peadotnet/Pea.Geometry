@@ -1,10 +1,10 @@
-﻿using Pea.Core;
+﻿using Pea.Geometry.General;
 using System;
 using System.Collections.Generic;
 
 namespace Pea.Geometry2D.Shapes
 {
-	public class Rectangle : ShapeBase, IDeepCloneable<Rectangle>
+	public class Rectangle : ShapeBase
 	{
 		public double Width { get; }
 		public double Height { get; }
@@ -83,7 +83,7 @@ namespace Pea.Geometry2D.Shapes
 			Ratio = height / width;
 		}
 
-		public Rectangle DeepClone()
+		public override IShape2D DeepClone()
 		{
 			return new Rectangle(Center.X, Center.Y, Width, Height);
 		}
@@ -95,6 +95,11 @@ namespace Pea.Geometry2D.Shapes
 			_top = double.NaN;
 			_bottom = double.NaN;
 			_points = null;
+		}
+
+		public override IShape2D DoOffset(double marginWidth)
+		{
+			return new Rectangle(this.Center.X, this.Center.Y, this.Width + 2 * marginWidth, this.Height + 2 * marginWidth);
 		}
 	}
 }

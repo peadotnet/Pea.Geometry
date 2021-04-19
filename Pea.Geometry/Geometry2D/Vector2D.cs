@@ -1,5 +1,4 @@
-﻿using Pea.Core;
-using Pea.Geometry.General;
+﻿using Pea.Geometry.General;
 using System;
 
 namespace Pea.Geometry2D

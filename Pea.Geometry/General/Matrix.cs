@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Pea.Geometry.General
 {
-	public class Matrix
+	public class Matrix<T> where T: Vector, new()
 	{
 		public int Dimensions { get; protected set; }
 		public double[,] Values { get; protected set; }
@@ -32,9 +31,9 @@ namespace Pea.Geometry.General
 			}
 		}
 
-		public static Matrix Identity(int dimensions)
+		public static Matrix<T> Identity(int dimensions)
 		{
-			var matrix = new Matrix(dimensions);
+			var matrix = new Matrix<T>(dimensions);
 			for(int i=0; i< dimensions; i++)
 			{
 				matrix.Values[i, i] = 1;
@@ -43,11 +42,11 @@ namespace Pea.Geometry.General
 			return matrix;
 		}
 
-		public static Matrix operator *(Matrix matrix1, Matrix matrix2)
+		public static Matrix<T> operator *(Matrix<T> matrix1, Matrix<T> matrix2)
 		{
 			if (matrix1.Dimensions != matrix2.Dimensions) throw new ArgumentException("The dimensions of matrices must be the same!");
 
-			var result = new Matrix(matrix1.Dimensions);
+			var result = new Matrix<T>(matrix1.Dimensions);
 			for (int i = 0; i < matrix1.Dimensions; i++)
 			{
 				for (int j = 0; j < matrix1.Dimensions; j++)
@@ -62,7 +61,7 @@ namespace Pea.Geometry.General
 			return result;
 		}
 
-		public static Matrix Compose(params Matrix[] matrices)
+		public static Matrix<T> Compose(params Matrix<T>[] matrices)
 		{
 			if (matrices.Length == 0) return null;
 
@@ -77,11 +76,11 @@ namespace Pea.Geometry.General
 			return result;
 		}
 
-		public Vector Apply(Vector vector)
+		public T Apply(T vector)
 		{
 			if (vector.Dimensions != this.Dimensions) throw new ArgumentException("The dimension of the matrix and the vector must be the same!");
 
-			var result = new Vector(vector.Dimensions);
+			var result = new T();
 			for(int i=0; i< vector.Dimensions; i++)
 			{
 				for (int j=0; j< this.Dimensions; j++)

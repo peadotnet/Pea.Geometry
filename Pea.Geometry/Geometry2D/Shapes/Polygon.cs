@@ -1,10 +1,10 @@
-﻿using Pea.Core;
+﻿using Pea.Geometry.General;
 using System;
 using System.Collections.Generic;
 
 namespace Pea.Geometry2D.Shapes
 {
-	public class Polygon : ShapeBase, IDeepCloneable<Polygon>
+	public class Polygon : ShapeBase
 	{
 		private Rectangle _boundingRectangle = null;
 		public Rectangle BoundingRectangle
@@ -73,13 +73,79 @@ namespace Pea.Geometry2D.Shapes
 			return new Rectangle((xMin + xMax)/2, (yMin + yMax)/2, xMax - xMin, yMax - yMin);
 		}
 
-		public Polygon DeepClone()
+		public bool IsConvex()
 		{
-			return new Polygon(Points);
+			throw new NotImplementedException();
+			//public bool PolygonIsConvex()
+			//{
+			//	// For each set of three adjacent points A, B, C,
+			//	// find the cross product AB · BC. If the sign of
+			//	// all the cross products is the same, the angles
+			//	// are all positive or negative (depending on the
+			//	// order in which we visit them) so the polygon
+			//	// is convex.
+			//	bool got_negative = false;
+			//	bool got_positive = false;
+			//	int num_points = Points.Length;
+			//	int B, C;
+			//	for (int A = 0; A < num_points; A++)
+			//	{
+			//		B = (A + 1) % num_points;
+			//		C = (B + 1) % num_points;
+
+			//		float cross_product =
+			//			CrossProductLength(
+			//				Points[A].X, Points[A].Y,
+			//				Points[B].X, Points[B].Y,
+			//				Points[C].X, Points[C].Y);
+			//		if (cross_product < 0)
+			//		{
+			//			got_negative = true;
+			//		}
+			//		else if (cross_product > 0)
+			//		{
+			//			got_positive = true;
+			//		}
+			//		if (got_negative && got_positive) return false;
+			//	}
+
+			//	// If we got this far, the polygon is convex.
+			//	return true;
+			//}
+
+			// Return the cross product AB x BC.
+			// The cross product is a vector perpendicular to AB
+			// and BC having length |AB| * |BC| * Sin(theta) and
+			// with direction given by the right-hand rule.
+			// For two vectors in the X-Y plane, the result is a
+			// vector with X and Y components 0 so the Z component
+			// gives the vector's length and direction.
+			//public static float CrossProductLength(float Ax, float Ay,
+			//	float Bx, float By, float Cx, float Cy)
+			//{
+			//	// Get the vectors' coordinates.
+			//	float BAx = Ax - Bx;
+			//	float BAy = Ay - By;
+			//	float BCx = Cx - Bx;
+			//	float BCy = Cy - By;
+
+			//	// Calculate the Z coordinate of the cross product.
+			//	return (BAx * BCy - BAy * BCx);
+			//}
 		}
 
 		public override void Invalidate()
 		{
+		}
+
+		public override IShape2D DoOffset(double marginWidth)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override IShape2D DeepClone()
+		{
+			return new Polygon(Points);
 		}
 	}
 }

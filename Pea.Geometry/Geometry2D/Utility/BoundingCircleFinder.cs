@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 
 
-public sealed class SmallestEnclosingCircle
+public sealed class BoundingCircleFinder
 {
 
 	/* 

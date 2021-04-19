@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>PEA.Geometry</PackageId>
+    <Authors>Zoltán Bácskai</Authors>
+    <Company>PEA</Company>
+    <Product>PEA.Geometry</Product>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/peadotnet/Pea.Geometry</RepositoryUrl>
+    <PackageTags>PEA.NET, optimization, geometric, 2D</PackageTags>
+    <Description>Lightweight geometric representations and operations for developing geometric optimization applications with PEA.NET</Description>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\PEA.NET\src\PEA\PEA\PEA.csproj" />
+    <None Include="..\..\PEA.NET\documentation\icons\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\PEA.NET\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
