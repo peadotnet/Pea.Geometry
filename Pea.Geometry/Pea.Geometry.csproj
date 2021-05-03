@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/peadotnet/Pea.Geometry</RepositoryUrl>
     <PackageTags>PEA.NET, optimization, geometric, 2D</PackageTags>
     <Description>Lightweight geometric representations and operations for developing geometric optimization applications with PEA.NET</Description>
-    <Version>1.0.3</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>

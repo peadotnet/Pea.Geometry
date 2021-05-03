@@ -38,6 +38,8 @@ namespace Pea.Geometry2D.Shapes
 
 		private Polygon GetOffset(double marginWidth)
 		{
+			if (marginWidth == 0) return this.DeepClone() as Polygon;
+
 			var normals = GetSideNormals(Points);
 			var newSides = CreateSlidedSides(Points, normals);
 			var polygon = new Polygon(newSides);
