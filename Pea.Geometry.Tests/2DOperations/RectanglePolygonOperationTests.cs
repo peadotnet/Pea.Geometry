@@ -70,28 +70,6 @@ namespace Pea.Geometry.Tests.Operations
 		}
 
 		[Theory]
-		[InlineData(0, 0, true)]
-		[InlineData(-5, 3, true)]
-		[InlineData(-3, 2, true)]
-		[InlineData(5, 3, true)]
-		[InlineData(3, 2, true)]
-		[InlineData(-7, 6, false)]
-		[InlineData(-9, -1, false)]
-		[InlineData(9, -1, false)]
-		[InlineData(-9, 0, true)]
-		[InlineData(7, 0, false)]
-		[InlineData(0, 3, false)]
-
-		public void Point_wn_Poly(double x, double y, bool expected)
-		{
-			Polygon polygon = CreateTestPolygon1();
-			var operation = new RectanglePolygonOperation();
-			Vector2D point = new Vector2D(x, y);
-			var result = operation.wn_PnPoly(point, polygon);
-			result.Should().Be(expected);
-		}
-
-		[Theory]
 		[InlineData(0, 0, 4, 2, true)]
 		[InlineData(-12, 0, 4, 2, false)]
 		[InlineData(-10, 0, 4, 2, true)]

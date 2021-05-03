@@ -2,16 +2,18 @@
 
 namespace Pea.Geometry.General
 {
-	public interface ITransformable<T> where T : Vector, new()
+	public interface ITransformable<TC, TD>
+		where TC : ITransformable<TC, TD>
+		where TD : Vector, new()
 	{
-		IList<Matrix<T>> Transformations { get; }
-		void Apply(Matrix<T> transformation);
-		void Rotate(double angle);
-		void Scale(double xFactor, double yFactor);
-		void Translate(double xOffset, double yOffset);
-		void XMirror();
-		void YMirror();
-		void XSkew(double angle);
-		void YSkew(double angle);
+		IList<Matrix<TD>> Transformations { get; }
+		TC Apply(Matrix<TD> transformation);
+		TC Rotate(double angle);
+		TC Scale(double xFactor, double yFactor);
+		TC Translate(double xOffset, double yOffset);
+		TC XMirror();
+		TC YMirror();
+		TC XSkew(double angle);
+		TC YSkew(double angle);
 	}
 }

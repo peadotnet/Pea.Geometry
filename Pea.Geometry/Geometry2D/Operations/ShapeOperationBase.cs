@@ -1,4 +1,5 @@
-﻿using Pea.Geometry2D.Shapes;
+﻿using Pea.Geometry2D;
+using Pea.Geometry2D.Shapes;
 
 namespace Pea.Geometry.Geometry2D.Operations
 {
@@ -12,8 +13,13 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return DoOverlap((T1)shape1, (T2)shape2);
 		}
 
-		public abstract bool IsIncluded(T1 shape1, T2 shape2);
+		public abstract bool DoOverlapWithMargin(T1 shape1, T2 shape2);
+		bool IShapeOperation.DoOverlapWithMargin(IShape2D shape1, IShape2D shape2)
+		{
+			return DoOverlapWithMargin((T1)shape1, (T2)shape2);
+		}
 
+		public abstract bool IsIncluded(T1 shape1, T2 shape2);
 		bool IShapeOperation.IsIncluded(IShape2D shape1, IShape2D shape2)
 		{
 			return IsIncluded((T1)shape1, (T2)shape2);
@@ -31,6 +37,20 @@ namespace Pea.Geometry.Geometry2D.Operations
 			double yDistance = Abs(shape1.Center.Y - shape2.Center.Y);
 
 			return System.Math.Sqrt(xDistance * xDistance + yDistance * yDistance);
+		}
+
+		protected bool IsSectionCloserToPoint(Vector2D line1, Vector2D line2, Vector2D point, double marginWidth)
+		{
+			double dx = line2.X - line1.X;
+			double dy = line2.Y - line1.Y;
+
+			double A = dx * dx + dy * dy;
+			double B = 2 * (dx * (line1.X - point.X) + dy * (line1.Y - point.Y));
+			double C = (line1.X - point.X) * (line1.X - point.X) + (line1.Y - point.Y) * (line1.Y - point.Y) - marginWidth * marginWidth;
+
+			double det = B * B - 4 * A * C;
+
+			return (det >= 0);
 		}
 
 		double IShapeOperation.EuclideanDistanceOfCenters(IShape2D shape1, IShape2D shape2)

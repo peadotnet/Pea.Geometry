@@ -30,6 +30,11 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return Operations[key].DoOverlap(shape1, shape2);
 		}
 
+		public override bool DoOverlapWithMargin(IShape2D shape1, IShape2D shape2)
+		{
+			var key = Tuple.Create<Type, Type>(shape1.GetType(), shape2.GetType());
+			return Operations[key].DoOverlapWithMargin(shape1, shape2);
+		}
 
 		public override double Distance(IShape2D shape1, IShape2D shape2)
 		{

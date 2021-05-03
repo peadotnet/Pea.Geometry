@@ -54,7 +54,8 @@ namespace Pea.Geometry2D
 
 		public Vector2D GetNormal()
 		{
-			return new Vector2D(Y, -1 * X);
+			var length = GetLength();
+			return new Vector2D(-Y / length, X / length);
 		}
 
 		public Vector2D DeepClone()

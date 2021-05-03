@@ -1,7 +1,5 @@
 ﻿using Pea.Geometry2D;
-using Pea.Geometry2D.Shapes;
 using System;
-using System.Collections.Generic;
 
 namespace Pea.Geometry.Geometry2D.Operations
 {
@@ -18,20 +16,22 @@ namespace Pea.Geometry.Geometry2D.Operations
 
 		public static int WhichSide(Vector2D p, Vector2D q, Vector2D r)
 		{
-			double cross = (q.Y - p.Y) * (r.X - q.X) -
-					(q.X - p.X) * (r.Y - q.Y);
-
-			if (cross == 0) return 0;
+            double cross = CrossProduct(p, r, q, p);
+            if (cross == 0) return 0;
 			return (cross > 0) ? 1 : -1;
 		}
 
-		public static double Orientation(Vector2D p, Vector2D q, Vector2D r)
+        public static double DotProduct(Vector2D p0, Vector2D p1, Vector2D q0, Vector2D q1)
 		{
-			return ((q.X - p.X) * (r.Y - p.Y)
-					- (r.X - p.X) * (q.Y - p.Y));
+            return (p1.X - p0.X + q1.X - q0.X) * (p1.Y - p0.Y + q1.Y - q0.Y);
 		}
 
-		public static Boolean DoIntersect(Vector2D p1, Vector2D q1, Vector2D p2, Vector2D q2)
+        public static double CrossProduct(Vector2D p0, Vector2D p1, Vector2D q0, Vector2D q1)
+		{
+            return (p1.X - p0.X) * (q1.Y - q0.Y) - (q1.X - q0.X) * (p1.Y - p0.Y);
+        }
+
+        public static Boolean DoIntersect(Vector2D p1, Vector2D q1, Vector2D p2, Vector2D q2)
         {
             int o1 = WhichSide(p1, q1, p2);
             int o2 = WhichSide(p1, q1, q2);
@@ -48,6 +48,25 @@ namespace Pea.Geometry.Geometry2D.Operations
             return false;
         }
 
+        public static bool DoLinesIntersect(Vector2D p0, Vector2D p1, Vector2D q0, Vector2D q1, out Vector2D intersection)
+        {
+            intersection = null;
+
+            double d = CrossProduct(p0, p1, q0, q1);
+            if (d == 0) return false;
+
+            double n_a = (q1.X - q0.X) * (p0.Y - q0.Y) - (p0.X - q0.X) * (q1.Y - q0.Y);
+            double n_b = (p1.X - p0.X) * (p0.Y - q0.Y) - (p1.Y - p0.Y) * (p0.X - q0.X);
+
+            double ua = n_a / d;
+            double ub = n_b / d;
+
+            double xint = p0.X + (ua * (p1.X - p0.X));
+            double yint = p0.Y + (ua * (p1.Y - p0.Y));
+            intersection = new Vector2D(xint, yint);
+
+            return true;
+        }
 
 
     }

@@ -71,16 +71,5 @@ namespace Pea.Geometry.Benchmarks
 			}
 			return insideCount;
 		}
-
-		[Benchmark]
-		public int wn_Poly()
-		{
-			var insideCount = 0;
-			for (int i = 0; i < Count; i++)
-			{
-				if (Operation.wn_PnPoly(Points[i], RandomPolygon)) insideCount++;
-			}
-			return insideCount;
-		}
 	}
 }

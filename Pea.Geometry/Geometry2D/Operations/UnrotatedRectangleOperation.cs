@@ -1,5 +1,4 @@
 ﻿using Pea.Geometry2D.Shapes;
-using System;
 
 namespace Pea.Geometry.Geometry2D.Operations
 {
@@ -19,6 +18,16 @@ namespace Pea.Geometry.Geometry2D.Operations
 			double yDistance = YDistance(shape1, shape2);
 
 			return (xDistance <= 0) && (yDistance <= 0);
+		}
+
+		public override bool DoOverlapWithMargin(Rectangle rectangle1, Rectangle rectangle2)
+		{
+			var margin = Max(rectangle1.MarginWidth, rectangle2.MarginWidth);
+
+			double xDistance = XDistance(rectangle1, rectangle2);
+			double yDistance = YDistance(rectangle1, rectangle2);
+
+			return (xDistance <= margin) && (yDistance <= margin);
 		}
 
 		public override bool IsIncluded(Rectangle shape1, Rectangle shape2)

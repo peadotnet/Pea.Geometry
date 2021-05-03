@@ -14,8 +14,9 @@ namespace Pea.Geometry2D.Shapes
 
 		public override void DoTransform()
 		{
-			base.DoTransform();
-			Radius = (Points[0] - Center).GetLength();
+			var transformation = ComposeTransformations();
+			Center = (Vector2D)transformation.Apply(Center);
+			ResetTransformations();
 		}
 
 		public override IShape2D DeepClone()

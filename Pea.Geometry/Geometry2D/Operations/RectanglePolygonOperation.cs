@@ -16,11 +16,13 @@ namespace Pea.Geometry.Geometry2D.Operations
 
 		public override double Distance(Rectangle rectangle, Polygon polygon)
 		{
-			throw new NotImplementedException();
+			return (rectangle.Center - polygon.Center).GetLength();
 		}
 
 		public override bool DoOverlap(Rectangle rectangle, Polygon polygon)
 		{
+			if (!DoOverlapWithBoundaryRectangle(rectangle, polygon.BoundingRectangle, 0)) return false;
+
 			var checkByPoints = CheckPolygonPoints(rectangle, polygon);
 			if (checkByPoints == ShapeRelation.Outside) return false;
 			if (checkByPoints == ShapeRelation.Intersected) return true;
@@ -31,15 +33,53 @@ namespace Pea.Geometry.Geometry2D.Operations
 			return AnySideIntersects(rectangle, polygon);
 		}
 
+		public override bool DoOverlapWithMargin(Rectangle rectangle, Polygon polygon)
+		{
+			double marginWidth = Max(rectangle.MarginWidth, polygon.MarginWidth);
+
+			if (!DoOverlapWithBoundaryRectangle(rectangle, polygon.BoundingRectangle, marginWidth)) return false;
+
+			var checkByPoints = CheckPolygonPoints(rectangle.Margin, polygon);
+			if (checkByPoints == ShapeRelation.Intersected) return true;
+
+			checkByPoints = AnyRectanglePointIsInside(rectangle.Margin, polygon);
+			if (checkByPoints == ShapeRelation.Intersected) return true;
+
+			if (AnySideIntersects(rectangle.Margin, polygon)) return true;
+
+			if (AnyPolygonPointIsCloserThanMargin(rectangle, polygon, marginWidth)) return true;
+
+			if (AnyRectanglePointIsCloserThanMargin(rectangle, polygon, marginWidth)) return true;
+
+			return false;
+		}
+
+		private bool DoOverlapWithBoundaryRectangle(Rectangle rectangle, Rectangle polygonBoundary, double marginWidth)
+		{
+			double xDistance = XDistance(rectangle, polygonBoundary);
+			double yDistance = YDistance(rectangle, polygonBoundary);
+
+			return (xDistance <= marginWidth) && (yDistance <= marginWidth);
+		}
+
+		private double YDistance(Rectangle shape1, Rectangle shape2)
+		{
+			return Abs(shape1.Center.Y - shape2.Center.Y) - (shape1.Height + shape2.Height) / 2;
+		}
+		private double XDistance(Rectangle shape1, Rectangle shape2)
+		{
+			return Abs(shape1.Center.X - shape2.Center.X) - (shape1.Width + shape2.Width) / 2;
+		}
+
 		public override bool IsIncluded(Rectangle rectangle, Polygon polygon)
 		{
-			var checkByPoints = CheckPolygonPoints(rectangle, polygon);
+			var checkByPoints = CheckPolygonPoints(rectangle.Margin, polygon);
 			if (checkByPoints == ShapeRelation.Outside) return false;
 			if (checkByPoints == ShapeRelation.Intersected) return false;
 
-			if (AnyRectanglePointIsOutside(rectangle, polygon)) return false;
+			if (AnyRectanglePointIsOutside(rectangle.Margin, polygon)) return false;
 
-			return !AnySideIntersects(rectangle, polygon);
+			return !AnySideIntersects(rectangle.Margin, polygon);
 		}
 
 		public ShapeRelation CheckPolygonPoints(Rectangle rectangle, Polygon polygon)
@@ -75,7 +115,7 @@ namespace Pea.Geometry.Geometry2D.Operations
 			var points = rectangle.Points;
 			for(int i=0; i < 4; i++)
 			{
-				if (wn_PnPoly(points[i], polygon)) return ShapeRelation.Intersected;
+				if (cn_PnPoly(points[i], polygon)) return ShapeRelation.Intersected;
 			}
 			return ShapeRelation.ToBeCalculated;
 		}
@@ -85,7 +125,33 @@ namespace Pea.Geometry.Geometry2D.Operations
 			var points = rectangle.Points;
 			for (int i = 0; i < 4; i++)
 			{
-				if (!wn_PnPoly(points[i], polygon)) return true;
+				if (!cn_PnPoly(points[i], polygon)) return true;
+			}
+			return false;
+		}
+
+		public bool AnyRectanglePointIsCloserThanMargin(Rectangle rectangle, Polygon polygon, double marginWith)
+		{
+			var points = rectangle.Points;
+			for(int r = 0; r < 4; r++)
+			{
+				for (int p=0; p < polygon.Points.Count - 1; p++)
+				{
+					if (IsSectionCloserToPoint(polygon.Points[p], polygon.Points[p + 1], points[r], marginWith)) return true;
+				}
+			}
+			return false;
+		}
+
+		public bool AnyPolygonPointIsCloserThanMargin(Rectangle rectangle, Polygon polygon, double marginWidth)
+		{
+			var points = rectangle.Points;
+			for (int p = 0; p < polygon.Points.Count - 1; p++)
+			{
+				for (int r = 0; r < 4; r++)
+				{
+					if (IsSectionCloserToPoint(points[r], polygon.Points[p], points[r + 1], marginWidth)) return true;
+				}
 			}
 			return false;
 		}
@@ -115,32 +181,6 @@ namespace Pea.Geometry.Geometry2D.Operations
 				}
 			}
 			return ((count & 1) == 1);
-		}
-
-		public bool wn_PnPoly(Vector2D point, Polygon polygon)
-		{
-			var n = polygon.Points.Count;
-			int count = 0;
-
-			for (int i = 0; i < n; i++)
-			{
-				var next = (i + 1) % n;
-				if (polygon.Points[i].Y <= point.Y)
-				{
-					if (polygon.Points[next].Y > point.Y)
-					{
-						if (VectorHelper.Orientation(polygon.Points[i], polygon.Points[next], point) > 0) count++;
-					}
-				}
-				else
-				{
-					if (polygon.Points[next].Y <= point.Y)
-					{
-						if (VectorHelper.Orientation(polygon.Points[i], polygon.Points[next], point) < 0) count--;
-					}
-				}
-			}
-			return count != 0;
 		}
 
 		public bool AnySideIntersects(Rectangle rectangle, Polygon polygon)

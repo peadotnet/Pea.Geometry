@@ -35,6 +35,21 @@ namespace Pea.Geometry.Tests.Operations
 		}
 
 		[Theory]
+		[InlineData(2, 1, 4, 2, -3, 2, 4, 2)]
+		[InlineData(2, 1, 4, 2, 2, 4, 4, 2)]
+		public void DisjunctRectangles_WithIntersectedMargins_DoOverlap_ShouldReturnTrue(double x1, double y1, double w1, double h1, double x2, double y2, double w2, double h2)
+		{
+			var rectangle1 = new Rectangle(x1, y1, w1, h1);
+			rectangle1.MarginWidth = 1;
+			var rectangle2 = new Rectangle(x2, y2, w2, h2);
+			rectangle2.MarginWidth = 1;
+			var intersection = new UnrotatedRectangleOperation();
+
+			var result = intersection.DoOverlapWithMargin(rectangle1, rectangle2);
+			result.Should().BeTrue();
+		}
+
+		[Theory]
 		[InlineData(0, 0, 6, 4, 0, 0, 4, 2, -3)]
 		[InlineData(0, 3, 4, 2, 0, 0, 4, 2, 1)]
 		[InlineData(0, 3, 6, 4, 0, 0, 4, 2, 0)]

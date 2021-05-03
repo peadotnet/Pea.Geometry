@@ -1,10 +1,7 @@
 ﻿using FluentAssertions;
 using Pea.Geometry.Geometry2D.Operations;
 using Pea.Geometry2D;
-using Pea.Geometry2D.Shapes;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Pea.Geometry.Tests.Operations

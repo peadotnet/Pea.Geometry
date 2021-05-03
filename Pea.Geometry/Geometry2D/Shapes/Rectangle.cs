@@ -1,15 +1,25 @@
-﻿using Pea.Geometry.General;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Pea.Geometry2D.Shapes
 {
 	public class Rectangle : ShapeBase
 	{
+
 		public double Width { get; }
 		public double Height { get; }
 		public double Area { get; }
 		public double Ratio { get; }
+
+
+		private Rectangle _margin = null;
+		public Rectangle Margin
+		{
+			get
+			{
+				if (_margin == null) _margin = (Rectangle)DoOffset(MarginWidth);
+				return _margin;
+			}
+		}
 
 		private double _left = double.NaN;
 		public double Left
@@ -95,6 +105,14 @@ namespace Pea.Geometry2D.Shapes
 			_top = double.NaN;
 			_bottom = double.NaN;
 			_points = null;
+			_margin = null;
+		}
+
+		public override void DoTransform()
+		{
+			var transformation = ComposeTransformations();
+			Center = (Vector2D)transformation.Apply(Center);
+			ResetTransformations();
 		}
 
 		public override IShape2D DoOffset(double marginWidth)

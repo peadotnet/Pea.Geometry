@@ -1,11 +1,20 @@
-﻿using Pea.Geometry.General;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Pea.Geometry2D.Shapes
 {
 	public class Polygon : ShapeBase
 	{
+		private bool? _convex;
+		public bool IsConvex
+		{ 
+			get
+			{
+				if (!_convex.HasValue) _convex = Convex();
+				return _convex.Value;
+			}
+		}
+
 		private Rectangle _boundingRectangle = null;
 		public Rectangle BoundingRectangle
 		{
@@ -14,6 +23,24 @@ namespace Pea.Geometry2D.Shapes
 				if (_boundingRectangle == null) _boundingRectangle = CreateBoundingRectangle();
 				return _boundingRectangle;
 			}
+		}
+
+		private Polygon _offset;
+		public Polygon Offset
+		{
+			get
+			{
+				if (_offset == null) _offset = GetOffset(MarginWidth);
+				return _offset;
+			}
+		}
+
+		private Polygon GetOffset(double marginWidth)
+		{
+			var normals = GetSideNormals(Points);
+			var newSides = CreateSlidedSides(Points, normals);
+			var polygon = new Polygon(newSides);
+			return polygon;
 		}
 
 		internal Polygon(List<Vector2D> points)
@@ -43,18 +70,6 @@ namespace Pea.Geometry2D.Shapes
 			}
 		}
 
-		public double GetArea()
-		{
-			double area = 0;
-			int previous = Points.Count - 1;
-
-			for (int current = 0; current < Points.Count; current++)
-			{
-				area += Points[previous].X * Points[current].Y - Points[previous].Y * Points[current].X;
-			}
-			return area / 2;
-		}
-
 		public Rectangle CreateBoundingRectangle()
 		{
 			double xMin = double.MaxValue;
@@ -62,7 +77,7 @@ namespace Pea.Geometry2D.Shapes
 			double yMin = double.MaxValue;
 			double yMax = double.MinValue;
 
-			for(int i=0; i < Points.Count; i++)
+			for (int i = 0; i < Points.Count; i++)
 			{
 				if (Points[i].X < xMin) xMin = Points[i].X;
 				if (Points[i].X > xMax) xMax = Points[i].X;
@@ -70,82 +85,121 @@ namespace Pea.Geometry2D.Shapes
 				if (Points[i].Y > yMax) yMax = Points[i].Y;
 			}
 
-			return new Rectangle((xMin + xMax)/2, (yMin + yMax)/2, xMax - xMin, yMax - yMin);
+			return new Rectangle((xMin + xMax) / 2, (yMin + yMax) / 2, xMax - xMin, yMax - yMin);
 		}
 
-		public bool IsConvex()
+		public double GetArea()
 		{
-			throw new NotImplementedException();
-			//public bool PolygonIsConvex()
-			//{
-			//	// For each set of three adjacent points A, B, C,
-			//	// find the cross product AB · BC. If the sign of
-			//	// all the cross products is the same, the angles
-			//	// are all positive or negative (depending on the
-			//	// order in which we visit them) so the polygon
-			//	// is convex.
-			//	bool got_negative = false;
-			//	bool got_positive = false;
-			//	int num_points = Points.Length;
-			//	int B, C;
-			//	for (int A = 0; A < num_points; A++)
-			//	{
-			//		B = (A + 1) % num_points;
-			//		C = (B + 1) % num_points;
+			return Math.Abs(SignedArea());
+		}
 
-			//		float cross_product =
-			//			CrossProductLength(
-			//				Points[A].X, Points[A].Y,
-			//				Points[B].X, Points[B].Y,
-			//				Points[C].X, Points[C].Y);
-			//		if (cross_product < 0)
-			//		{
-			//			got_negative = true;
-			//		}
-			//		else if (cross_product > 0)
-			//		{
-			//			got_positive = true;
-			//		}
-			//		if (got_negative && got_positive) return false;
-			//	}
+		public bool IsCounterClockwise()
+		{
+			return (SignedArea() < 0);
+		}
 
-			//	// If we got this far, the polygon is convex.
-			//	return true;
-			//}
+		protected double SignedArea()
+		{
+			double area = 0;
+			int previous = 0;
 
-			// Return the cross product AB x BC.
-			// The cross product is a vector perpendicular to AB
-			// and BC having length |AB| * |BC| * Sin(theta) and
-			// with direction given by the right-hand rule.
-			// For two vectors in the X-Y plane, the result is a
-			// vector with X and Y components 0 so the Z component
-			// gives the vector's length and direction.
-			//public static float CrossProductLength(float Ax, float Ay,
-			//	float Bx, float By, float Cx, float Cy)
-			//{
-			//	// Get the vectors' coordinates.
-			//	float BAx = Ax - Bx;
-			//	float BAy = Ay - By;
-			//	float BCx = Cx - Bx;
-			//	float BCy = Cy - By;
+			for (int current = 1; current < Points.Count; current++)
+			{
+				area += Points[previous].X * Points[current].Y - Points[previous].Y * Points[current].X;
+			}
+			return area / 2;
+		}
 
-			//	// Calculate the Z coordinate of the cross product.
-			//	return (BAx * BCy - BAy * BCx);
-			//}
+		protected bool Convex()
+		{
+			bool gotLeft = false;
+			bool gotRight = false;
+
+			for (int a = 0; a < Points.Count; a++)
+			{
+
+				var left = IsLeftTurn(a);
+
+				if (left) gotLeft = true;
+				if (!left) gotRight = true;
+
+				if (gotLeft && gotRight) return false;
+			}
+
+			return true;
+		}
+
+		protected bool IsLeftTurn(int index)
+		{
+			var count = Points.Count;
+			return (CrossProductLength(Points[(index - 1) % count], Points[index], Points[(index + 1) % count]) < 0);
+		}
+
+		protected List<Vector2D> GetSideNormals(List<Vector2D> points)
+		{
+			var normals = new List<Vector2D>();
+			for (int i = 0; i < points.Count - 1; i++)
+			{
+				var sideVector = points[i + 1] - points[i];
+				normals.Add(sideVector.GetNormal());
+			}
+			return normals;
+		}
+
+		protected List<Vector2D> CreateSlidedSides(List<Vector2D> points, List<Vector2D> normals)
+		{
+			var newSides = new List<Vector2D>();
+			var previousSlide = normals[0] * MarginWidth;
+			for (int i = 1; i < points.Count; i++)
+			{
+				var slide = normals[i % normals.Count] * MarginWidth;
+				if (IsLeftTurn(i))
+				{
+					var corner = (slide + previousSlide);
+					corner = corner * MarginWidth * (1 / corner.GetLength());
+					newSides.Add(points[i] + previousSlide);
+					newSides.Add(points[i] + corner);
+					newSides.Add(points[i] + slide);
+				}
+				else
+				{
+					var p0 = points[i - 1] + previousSlide;
+					var p1 = points[i] + previousSlide;
+					var p2 = points[i] + slide;
+					var p3 = points[(i +1) % (Points.Count - 1)] + slide;
+					
+					if (Geometry.Geometry2D.Operations.VectorHelper.DoLinesIntersect(p0, p1, p2, p3, out Vector2D intersection))
+					{
+						newSides.Add(intersection);
+					}
+					else
+					{
+						bool whatTheF = false;
+					}
+				}
+				previousSlide = slide;
+			}
+			return newSides;
+
 		}
 
 		public override void Invalidate()
 		{
+			_boundingRectangle = null;
+			_offset = null;
+			//_convex not changes during transformations
 		}
 
 		public override IShape2D DoOffset(double marginWidth)
 		{
-			throw new NotImplementedException();
+			return DeepClone();
 		}
 
 		public override IShape2D DeepClone()
 		{
 			return new Polygon(Points);
 		}
+
+
 	}
 }

@@ -5,48 +5,57 @@ using System.Collections.Generic;
 
 namespace Pea.Geometry2D.Shapes
 {
-	public abstract class Transformable2DBase : ITransformable<Vector2D>
+	public abstract class Transformable2DBase<TC> : ITransformable<TC, Vector2D>
+		where TC: Transformable2DBase<TC>
 	{
 		public IList<Matrix<Vector2D>> Transformations { get; } = new List<Matrix<Vector2D>>();
 
-		public void Apply(Matrix<Vector2D> transformation)
+		public virtual TC Apply(Matrix<Vector2D> transformation)
 		{
 			Transformations.Add(transformation);
+			return (TC)this;
 		}
 
-		public void Rotate(double angle)
+		public virtual TC Rotate(double angle)
 		{
 			Transformations.Add(TransformationFactory.Rotation(angle));
+			return (TC)this;
 		}
 
-		public void Scale(double xFactor, double yFactor)
+		public virtual TC Scale(double xFactor, double yFactor)
 		{
 			Transformations.Add(TransformationFactory.Scaling(xFactor, yFactor));
+			return (TC)this;
 		}
 
-		public void Translate(double xOffset, double yOffset)
+		public virtual TC Translate(double xOffset, double yOffset)
 		{
 			Transformations.Add(TransformationFactory.Translation(xOffset, yOffset));
+			return (TC)this;
 		}
 
-		public void XMirror()
+		public virtual TC XMirror()
 		{
 			Transformations.Add(TransformationFactory.XMirror());
+			return (TC)this;
 		}
 
-		public void YMirror()
+		public virtual TC YMirror()
 		{
 			Transformations.Add(TransformationFactory.YMirror());
+			return (TC)this;
 		}
 
-		public void XSkew(double angle)
+		public virtual TC XSkew(double angle)
 		{
 			Transformations.Add(TransformationFactory.XSkew(angle));
+			return (TC)this;
 		}
 
-		public void YSkew(double angle)
+		public virtual TC YSkew(double angle)
 		{
 			Transformations.Add(TransformationFactory.YSkew(angle));
+			return (TC)this;
 		}
 
 		protected Matrix<Vector2D> ComposeTransformations()
@@ -61,6 +70,11 @@ namespace Pea.Geometry2D.Shapes
 			}
 
 			return transformation;
+		}
+
+		protected void ResetTransformations()
+		{
+			Transformations.Clear();
 		}
 	}
 }
