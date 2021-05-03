@@ -7,8 +7,8 @@ namespace Pea.Geometry.Geometry2D.Operations
 	{
 		public static bool OnSegment(Vector2D p, Vector2D q, Vector2D r)
 		{
-			if (q.X <= Math.Max(p.X, r.X) && q.X >= Math.Min(p.X, r.X) &&
-				q.Y <= Math.Max(p.Y, r.Y) && q.Y >= Math.Min(p.Y, r.Y))
+			if (q.X <= Max(p.X, r.X) && q.X >= Min(p.X, r.X) &&
+				q.Y <= Max(p.Y, r.Y) && q.Y >= Min(p.Y, r.Y))
 				return true;
 
 			return false;
@@ -23,7 +23,7 @@ namespace Pea.Geometry.Geometry2D.Operations
 
         public static double DotProduct(Vector2D p0, Vector2D p1, Vector2D q0, Vector2D q1)
 		{
-            return (p1.X - p0.X + q1.X - q0.X) * (p1.Y - p0.Y + q1.Y - q0.Y);
+            return (p1.X - p0.X) * (q1.X - q0.X) + (p1.Y - p0.Y) * (q1.Y - q0.Y);
 		}
 
         public static double CrossProduct(Vector2D p0, Vector2D p1, Vector2D q0, Vector2D q1)
@@ -68,6 +68,30 @@ namespace Pea.Geometry.Geometry2D.Operations
             return true;
         }
 
+        public static double LinePointDistance(Vector2D l0, Vector2D l1, Vector2D p)
+		{
+            var dot1 = DotProduct(l0, l1, l1, p);
+            if (dot1 > 0) return (p - l1).GetLength();
 
+            var dot2 = DotProduct(l1, l0, l0, p);
+            if (dot2 > 0) return (p - l0).GetLength();
+
+            return Abs(CrossProduct(l0, p, l1, p) / (l1 - l0).GetLength());
+        }
+
+        private static double Abs(double a)
+		{
+            return (a < 0) ? -a : a;
+		}
+
+        private static double Max(double a, double b)
+		{
+            return (a > b) ? a : b;
+		}
+
+        private static double Min(double a, double b)
+		{
+            return (a < b) ? a : b;
+		}
     }
 }

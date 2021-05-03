@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pea.Geometry.Geometry2D.Operations;
+using System;
 using System.Collections.Generic;
 
 namespace Pea.Geometry2D.Shapes
@@ -179,8 +180,19 @@ namespace Pea.Geometry2D.Shapes
 				}
 				previousSlide = slide;
 			}
-			return newSides;
 
+			return newSides;
+		}
+
+		public double DistanceOfPoint(Vector2D point)
+		{
+			double minDistance = double.MaxValue;
+			for(int i=0; i < Points.Count - 1; i++)
+			{
+				var distance = VectorHelper.LinePointDistance(Points[i], Points[i + 1], point);
+				if (distance < minDistance) minDistance = distance;
+			}
+			return minDistance;
 		}
 
 		public override void Invalidate()
@@ -199,7 +211,5 @@ namespace Pea.Geometry2D.Shapes
 		{
 			return new Polygon(Points);
 		}
-
-
 	}
 }
