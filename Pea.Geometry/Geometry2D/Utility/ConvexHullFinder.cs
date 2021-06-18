@@ -72,7 +72,7 @@ namespace Pea.Geometry.Geometry2D.Utility
             Rectangle culling_box = GetMinMaxBox(points);
 
             // Cull the points.
-            List<Vector2D> results = new List<Vector2D>();
+            List<Vector2D> results = new List<Vector2D>(points.Count);
             foreach (Vector2D pt in points)
             {
                 // See if (this point lies outside of the culling box.

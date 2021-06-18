@@ -63,6 +63,11 @@ namespace Pea.Geometry2D
 			return new Vector2D(X, Y);
 		}
 
+		public Vector2D Transpose()
+		{
+			return new Vector2D(Y, X);
+		}
+
 		#region Operator overloading
 		public static Vector2D operator -(Vector2D vector2, Vector2D vector1)
 		{

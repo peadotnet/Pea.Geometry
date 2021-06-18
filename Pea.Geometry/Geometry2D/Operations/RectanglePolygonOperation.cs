@@ -175,7 +175,7 @@ namespace Pea.Geometry.Geometry2D.Operations
 				if (((polygon.Points[i].Y <= point.Y) && (polygon.Points[next].Y > point.Y))
 				 || ((polygon.Points[i].Y > point.Y) && (polygon.Points[next].Y <= point.Y)))
 				{
-					var vt = (point.Y - polygon.Points[i].Y) / (polygon.Points[i + 1].Y - polygon.Points[i].Y);
+					var vt = (point.Y - polygon.Points[i].Y) / (polygon.Points[next].Y - polygon.Points[i].Y);
 					if (point.X < polygon.Points[i].X + vt * (polygon.Points[next].X - polygon.Points[i].X))
 						count++;
 				}

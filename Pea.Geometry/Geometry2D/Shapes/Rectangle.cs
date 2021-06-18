@@ -73,7 +73,7 @@ namespace Pea.Geometry2D.Shapes
 
 		private List<Vector2D> CreatePoints()
 		{
-			var points = new List<Vector2D>(4)
+			var points = new List<Vector2D>(5)
 			{
 				new Vector2D(Center.X - Width / 2, Center.Y - Height / 2),
 				new Vector2D(Center.X + Width / 2, Center.Y - Height / 2),

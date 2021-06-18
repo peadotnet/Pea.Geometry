@@ -10,5 +10,15 @@
 			Dimensions = dimensions;
 			Coordinates = new double[dimensions];
 		}
+
+		public override string ToString()
+		{
+			var sb = new System.Text.StringBuilder();
+			for (int i=0; i< Coordinates.Length; i++)
+			{
+				sb.Append(Coordinates[i].ToString("#.##") + " ");
+			}
+			return sb.ToString();
+		}
 	}
 }

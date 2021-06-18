@@ -54,7 +54,7 @@ namespace Pea.Geometry2D.Shapes
 			double sumX = 0;
 			double sumY = 0;
 
-			Points = new List<Vector2D>();
+			Points = new List<Vector2D>(points.Count + 1);
 
 			for (int i=0; i< points.Count; i++)
 			{
@@ -67,7 +67,7 @@ namespace Pea.Geometry2D.Shapes
 
 			var first = Points[0];
 			var last = Points[count - 1];
-			if (first.X != last.X || last.Y != last.Y)
+			if (first.X != last.X || first.Y != last.Y)
 			{
 				Points.Add(new Vector2D(first.X, first.Y));
 			}
@@ -140,7 +140,7 @@ namespace Pea.Geometry2D.Shapes
 
 		protected List<Vector2D> GetSideNormals(List<Vector2D> points)
 		{
-			var normals = new List<Vector2D>();
+			var normals = new List<Vector2D>(points.Count);
 			for (int i = 0; i < points.Count - 1; i++)
 			{
 				var sideVector = points[i + 1] - points[i];
@@ -151,7 +151,7 @@ namespace Pea.Geometry2D.Shapes
 
 		protected List<Vector2D> CreateSlidedSides(List<Vector2D> points, List<Vector2D> normals)
 		{
-			var newSides = new List<Vector2D>();
+			var newSides = new List<Vector2D>(points.Count);
 			var previousSlide = normals[0] * MarginWidth;
 			for (int i = 1; i < points.Count; i++)
 			{
@@ -171,13 +171,9 @@ namespace Pea.Geometry2D.Shapes
 					var p2 = points[i] + slide;
 					var p3 = points[(i +1) % (Points.Count - 1)] + slide;
 					
-					if (Geometry.Geometry2D.Operations.VectorHelper.DoLinesIntersect(p0, p1, p2, p3, out Vector2D intersection))
+					if (VectorHelper.DoLinesIntersect(p0, p1, p2, p3, out Vector2D intersection))
 					{
 						newSides.Add(intersection);
-					}
-					else
-					{
-						bool whatTheF = false;
 					}
 				}
 				previousSlide = slide;
