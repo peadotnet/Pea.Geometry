@@ -1,10 +1,17 @@
-﻿using Pea.Geometry.General;
-
-namespace Pea.Geometry2D.Shapes
+﻿namespace Pea.Geometry2D.Shapes
 {
 	public class Circle : ShapeBase
 	{
-		public double Radius { get; set; }
+		private double _radius;
+		public double Radius 
+		{
+			get => _radius;
+			set
+			{
+				_radius = value;
+				Invalidate();
+			}
+		}
 
 		public Circle(Vector2D center, double radius)
 		{
@@ -26,6 +33,7 @@ namespace Pea.Geometry2D.Shapes
 
 		public override void Invalidate()
 		{
+			_boundingRectangle = null;
 		}
 
 		public bool Contains(Vector2D point)
@@ -38,6 +46,11 @@ namespace Pea.Geometry2D.Shapes
 		public override IShape2D DoOffset(double marginWidth)
 		{
 			return new Circle(this.Center.DeepClone(), this.Radius + marginWidth);
+		}
+
+		protected override Rectangle CreateBoundingRectangle()
+		{
+			return new Rectangle(Center.X, Center.Y, 2 * Radius, 2 * Radius);
 		}
 	}
 }

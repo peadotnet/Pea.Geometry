@@ -16,16 +16,6 @@ namespace Pea.Geometry2D.Shapes
 			}
 		}
 
-		private Rectangle _boundingRectangle = null;
-		public Rectangle BoundingRectangle
-		{
-			get
-			{
-				if (_boundingRectangle == null) _boundingRectangle = CreateBoundingRectangle();
-				return _boundingRectangle;
-			}
-		}
-
 		private Polygon _offset;
 		public Polygon Offset
 		{
@@ -73,7 +63,7 @@ namespace Pea.Geometry2D.Shapes
 			}
 		}
 
-		public Rectangle CreateBoundingRectangle()
+		protected override Rectangle CreateBoundingRectangle()
 		{
 			double xMin = double.MaxValue;
 			double xMax = double.MinValue;
@@ -86,6 +76,7 @@ namespace Pea.Geometry2D.Shapes
 				if (Points[i].X > xMax) xMax = Points[i].X;
 				if (Points[i].Y < yMin) yMin = Points[i].Y;
 				if (Points[i].Y > yMax) yMax = Points[i].Y;
+
 			}
 
 			return new Rectangle((xMin + xMax) / 2, (yMin + yMax) / 2, xMax - xMin, yMax - yMin);
@@ -109,6 +100,7 @@ namespace Pea.Geometry2D.Shapes
 			for (int current = 1; current < Points.Count; current++)
 			{
 				area += Points[previous].X * Points[current].Y - Points[previous].Y * Points[current].X;
+				previous = current;
 			}
 			return area / 2;
 		}

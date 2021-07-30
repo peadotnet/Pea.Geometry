@@ -18,6 +18,18 @@ namespace Pea.Geometry2D.Shapes
 			}
 		}
 
+		protected Rectangle _boundingRectangle = null;
+		public Rectangle BoundingRectangle
+		{
+			get
+			{
+				if (_boundingRectangle == null) _boundingRectangle = CreateBoundingRectangle();
+				return _boundingRectangle;
+			}
+		}
+
+		protected abstract Rectangle CreateBoundingRectangle();
+
 		public virtual List<Vector2D> Points { get; protected set; }
 
 		public double MarginWidth { get; set; }

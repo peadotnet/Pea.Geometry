@@ -48,7 +48,11 @@ namespace Pea.Geometry.Tests.TwoDimensionTransformations
 			//New syntax: fluent builder
 			shapes2.Translate(rotationCenterX, rotationCenterY).Rotate(rotationAngle).Translate(-rotationCenterX, -rotationCenterY).DoTransform();
 
-			shapes1.Shapes.Should().BeEquivalentTo(shapes2.Shapes);
+			shapes1.Shapes.Should().BeEquivalentTo(shapes2.Shapes, options => 
+			{
+				options.Excluding(shape => shape.BoundingRectangle);
+				return options;
+			});
 		}
 
 

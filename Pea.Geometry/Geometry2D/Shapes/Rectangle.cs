@@ -108,6 +108,11 @@ namespace Pea.Geometry2D.Shapes
 			_margin = null;
 		}
 
+		protected override Rectangle CreateBoundingRectangle()
+		{
+			return new Rectangle(Center.X, Center.Y, Width, Height);
+		}
+
 		public override void DoTransform()
 		{
 			var transformation = ComposeTransformations();
